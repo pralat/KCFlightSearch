@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<journey name="Search for MUC airport">
+    <description xml:space="preserve">Search for the Munich airport</description>
+    <actions xml:space="preserve">
+        <action>Type munich into the search field</action>
+        <action>Munich International Airport should be displayed</action>
+        <action>Click on the airport card</action>
+        <action>Available flights should be displayed</action>
+    </actions>
+</journey>
