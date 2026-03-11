@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kcflightsearch.data.local.FlightSearchDatabase
+import com.example.kcflightsearch.data.local.PreferencesManager
 import com.example.kcflightsearch.data.repository.FlightSearchRepository
 import com.example.kcflightsearch.ui.FlightSearchApp
 import com.example.kcflightsearch.ui.theme.KCFlightSearchTheme
@@ -21,11 +22,12 @@ class MainActivity : ComponentActivity() {
             database.airportDao(),
             database.flightRouteDao()
         )
+        val preferencesManager = PreferencesManager(applicationContext)
 
         setContent {
             KCFlightSearchTheme {
                 val viewModel: FlightSearchViewModel = viewModel(
-                    factory = FlightSearchViewModel.Factory(repository)
+                    factory = FlightSearchViewModel.Factory(repository, preferencesManager)
                 )
                 FlightSearchApp(viewModel = viewModel)
             }

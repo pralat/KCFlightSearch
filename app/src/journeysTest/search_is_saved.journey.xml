@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<journey name="Search Is Saved">
+    <description xml:space="preserve">Test that the user's search string is persisted in Preferences DataStore and populated when the app relaunches</description>
+    <actions xml:space="preserve">
+        <action>Ensure that the search field is empty. And then type 'mu' into the search field.</action>
+        <action>Two airport cards should be displayed, MUC and BSL.</action>
+        <action>Terminate and restart the app</action>
+        <action>Assert  that the search field  contains 'mu' and the same two airport cards are displayed.</action>
+    </actions>
+</journey>
