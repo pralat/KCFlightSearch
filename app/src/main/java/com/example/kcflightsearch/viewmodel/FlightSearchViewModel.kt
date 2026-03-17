@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.kcflightsearch.data.local.DestinationAirport
 import com.example.kcflightsearch.data.local.PreferencesManager
 import com.example.kcflightsearch.data.model.Airport
+import com.example.kcflightsearch.data.model.Favorite
 import com.example.kcflightsearch.data.repository.FlightSearchRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -78,6 +80,20 @@ class FlightSearchViewModel(
 
     fun clearSelection() {
         _selectedAirport.value = null
+    }
+
+    fun toggleFavorite(departureCode: String, destinationCode: String, isFavorite: Boolean) {
+        viewModelScope.launch {
+            if (isFavorite) {
+                repository.removeFavorite(departureCode, destinationCode)
+            } else {
+                repository.addFavorite(Favorite(departureCode = departureCode, destinationCode = destinationCode))
+            }
+        }
+    }
+
+    fun isFavorite(departureCode: String, destinationCode: String): Flow<Boolean> {
+        return repository.isFavorite(departureCode, destinationCode)
     }
 
     class Factory(

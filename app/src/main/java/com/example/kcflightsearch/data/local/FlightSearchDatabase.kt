@@ -5,10 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.kcflightsearch.data.model.Airport
+import com.example.kcflightsearch.data.model.Favorite
 import com.example.kcflightsearch.data.model.FlightRoute
 
 @Database(
-    entities = [Airport::class, FlightRoute::class],
+    entities = [Airport::class, FlightRoute::class, Favorite::class],
     version = 1,
     exportSchema = false
 )
@@ -16,6 +17,7 @@ abstract class FlightSearchDatabase : RoomDatabase() {
 
     abstract fun airportDao(): AirportDao
     abstract fun flightRouteDao(): FlightRouteDao
+    abstract fun favoriteDao(): FavoriteDao
 
     companion object {
         @Volatile

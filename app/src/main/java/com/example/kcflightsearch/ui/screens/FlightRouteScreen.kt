@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -71,9 +73,22 @@ fun FlightRouteScreen(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(favoriteRoutes) { destination ->
+                        val isFavorite by viewModel.isFavorite(
+                            selectedAirport?.iataCode ?: "",
+                            destination.iata_code
+                        ).collectAsState(initial = false)
+                        
                         RouteItem(
                             departureCode = selectedAirport?.iataCode ?: "",
-                            destination = destination
+                            destination = destination,
+                            isFavorite = isFavorite,
+                            onFavoriteClick = {
+                                viewModel.toggleFavorite(
+                                    selectedAirport?.iataCode ?: "",
+                                    destination.iata_code,
+                                    isFavorite
+                                )
+                            }
                         )
                     }
                 }
@@ -126,7 +141,9 @@ private fun DepartureAirportCard(airport: Airport) {
 @Composable
 private fun RouteItem(
     departureCode: String,
-    destination: DestinationAirport
+    destination: DestinationAirport,
+    isFavorite: Boolean,
+    onFavoriteClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -167,8 +184,16 @@ private fun RouteItem(
             Text(
                 text = formatPassengers(destination.passengers),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(end = 8.dp)
             )
+            IconButton(onClick = onFavoriteClick) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
+                    tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }

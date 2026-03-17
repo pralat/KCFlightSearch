@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         val database = FlightSearchDatabase.getDatabase(applicationContext)
         val repository = FlightSearchRepository(
             database.airportDao(),
-            database.flightRouteDao()
+            database.favoriteDao()
         )
         val preferencesManager = PreferencesManager(applicationContext)
 

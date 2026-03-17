@@ -2,13 +2,14 @@ package com.example.kcflightsearch.data.repository
 
 import com.example.kcflightsearch.data.local.AirportDao
 import com.example.kcflightsearch.data.local.DestinationAirport
-import com.example.kcflightsearch.data.local.FlightRouteDao
+import com.example.kcflightsearch.data.local.FavoriteDao
 import com.example.kcflightsearch.data.model.Airport
+import com.example.kcflightsearch.data.model.Favorite
 import kotlinx.coroutines.flow.Flow
 
 class FlightSearchRepository(
     private val airportDao: AirportDao,
-    private val flightRouteDao: FlightRouteDao
+    private val favoriteDao: FavoriteDao
 ) {
 
     fun getAllAirports(): Flow<List<Airport>> = airportDao.getAllAirports()
@@ -18,8 +19,20 @@ class FlightSearchRepository(
     suspend fun getAirportByCode(code: String): Airport? = airportDao.getAirportByCode(code)
 
     fun getDestinationsForDeparture(departureCode: String): Flow<List<DestinationAirport>> =
-        flightRouteDao.getDestinationsForDeparture(departureCode)
+        favoriteDao.getDestinationsForDeparture(departureCode)
 
-    fun getAllRoutes(): Flow<List<com.example.kcflightsearch.data.model.FlightRoute>> =
-        flightRouteDao.getAllRoutes()
+    // Favorite operations
+    fun getFavoritesForDeparture(departureCode: String): Flow<List<Favorite>> =
+        favoriteDao.getFavoritesForDeparture(departureCode)
+
+    fun isFavorite(departureCode: String, destinationCode: String): Flow<Boolean> =
+        favoriteDao.isFavorite(departureCode, destinationCode)
+
+    suspend fun addFavorite(favorite: Favorite) {
+        favoriteDao.insertFavorite(favorite)
+    }
+
+    suspend fun removeFavorite(departureCode: String, destinationCode: String) {
+        favoriteDao.deleteFavoriteByCodes(departureCode, destinationCode)
+    }
 }
