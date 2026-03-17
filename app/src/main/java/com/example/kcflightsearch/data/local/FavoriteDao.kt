@@ -8,6 +8,12 @@ import androidx.room.Query
 import com.example.kcflightsearch.data.model.Favorite
 import kotlinx.coroutines.flow.Flow
 
+data class DestinationAirport(
+    val iata_code: String,
+    val name: String,
+    val passengers: Long
+)
+
 @Dao
 interface FavoriteDao {
 
