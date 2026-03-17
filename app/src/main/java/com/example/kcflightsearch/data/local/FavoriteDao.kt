@@ -20,6 +20,15 @@ interface FavoriteDao {
     @Query("SELECT * FROM favorite ORDER BY departure_code ASC")
     fun getAllFavorites(): Flow<List<Favorite>>
 
+    // Get all favorite destinations with airport details
+    @Query("""
+        SELECT airport.iata_code, airport.name, airport.passengers
+        FROM favorite
+        INNER JOIN airport ON favorite.destination_code = airport.iata_code
+        ORDER BY airport.name ASC
+    """)
+    fun getAllFavoriteDestinations(): Flow<List<DestinationAirport>>
+
     @Query("SELECT * FROM favorite WHERE departure_code = :departureCode ORDER BY destination_code ASC")
     fun getFavoritesForDeparture(departureCode: String): Flow<List<Favorite>>
 

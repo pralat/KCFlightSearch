@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.kcflightsearch.data.local.DestinationAirport
 import com.example.kcflightsearch.data.model.Airport
 import com.example.kcflightsearch.viewmodel.FlightSearchViewModel
 
@@ -37,6 +39,7 @@ fun SearchScreen(
 ) {
     val searchQuery by viewModel.searchQuery.collectAsState()
     val searchResults by viewModel.searchResults.collectAsState()
+    val favoriteDestinations by viewModel.allFavoriteDestinations.collectAsState()
 
     Scaffold(
         topBar = {
@@ -76,14 +79,51 @@ fun SearchScreen(
                 singleLine = true
             )
 
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(searchResults) { airport ->
-                    AirportItem(
-                        airport = airport,
-                        onClick = { onAirportSelected(airport) }
-                    )
+            // Show favorites when search is empty
+            if (searchQuery.isEmpty() && favoriteDestinations.isNotEmpty()) {
+                Text(
+                    text = "Favorite Destinations",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(favoriteDestinations) { destination ->
+                        FavoriteDestinationItem(
+                            destination = destination,
+                            onClick = {
+                                // Find the airport and select it
+                                viewModel.onAirportSelected(
+                                    Airport(
+                                        id = 0,
+                                        name = destination.name,
+                                        iataCode = destination.iata_code,
+                                        passengers = destination.passengers
+                                    )
+                                )
+                                onAirportSelected(
+                                    Airport(
+                                        id = 0,
+                                        name = destination.name,
+                                        iataCode = destination.iata_code,
+                                        passengers = destination.passengers
+                                    )
+                                )
+                            }
+                        )
+                    }
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(searchResults) { airport ->
+                        AirportItem(
+                            airport = airport,
+                            onClick = { onAirportSelected(airport) }
+                        )
+                    }
                 }
             }
         }
@@ -122,6 +162,44 @@ private fun AirportItem(
                 text = formatPassengers(airport.passengers),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun FavoriteDestinationItem(
+    destination: com.example.kcflightsearch.data.local.DestinationAirport,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .clickable(onClick = onClick)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = destination.name,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = destination.iata_code,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            Icon(
+                imageVector = Icons.Default.Favorite,
+                contentDescription = "Favorite",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
     }

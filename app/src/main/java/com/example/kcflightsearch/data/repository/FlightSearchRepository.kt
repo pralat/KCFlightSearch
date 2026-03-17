@@ -22,6 +22,9 @@ class FlightSearchRepository(
         favoriteDao.getDestinationsForDeparture(departureCode)
 
     // Favorite operations
+    fun getAllFavoriteDestinations(): Flow<List<DestinationAirport>> =
+        favoriteDao.getAllFavoriteDestinations()
+
     fun getFavoritesForDeparture(departureCode: String): Flow<List<Favorite>> =
         favoriteDao.getFavoritesForDeparture(departureCode)
 

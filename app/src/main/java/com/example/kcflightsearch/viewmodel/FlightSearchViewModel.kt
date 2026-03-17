@@ -59,6 +59,15 @@ class FlightSearchViewModel(
             initialValue = emptyList()
         )
 
+    // All favorite destinations for displaying on search screen when query is empty
+    val allFavoriteDestinations: StateFlow<List<DestinationAirport>> =
+        repository.getAllFavoriteDestinations()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
+
     init {
         // Load saved search query from preferences
         viewModelScope.launch {
