@@ -3,6 +3,7 @@ package com.example.kcflightsearch.data.repository
 import com.example.kcflightsearch.data.local.AirportDao
 import com.example.kcflightsearch.data.local.DestinationAirport
 import com.example.kcflightsearch.data.local.FavoriteDao
+import com.example.kcflightsearch.data.local.FavoriteRoute
 import com.example.kcflightsearch.data.model.Airport
 import com.example.kcflightsearch.data.model.Favorite
 import kotlinx.coroutines.flow.Flow
@@ -22,8 +23,8 @@ class FlightSearchRepository(
         favoriteDao.getDestinationsForDeparture(departureCode)
 
     // Favorite operations
-    fun getAllFavoriteDestinations(): Flow<List<DestinationAirport>> =
-        favoriteDao.getAllFavoriteDestinations()
+    fun getAllFavoriteRoutes(): Flow<List<FavoriteRoute>> =
+        favoriteDao.getAllFavoriteRoutes()
 
     fun getFavoritesForDeparture(departureCode: String): Flow<List<Favorite>> =
         favoriteDao.getFavoritesForDeparture(departureCode)

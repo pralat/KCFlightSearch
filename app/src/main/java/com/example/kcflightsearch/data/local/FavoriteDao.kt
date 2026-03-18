@@ -14,20 +14,27 @@ data class DestinationAirport(
     val passengers: Long
 )
 
+data class FavoriteRoute(
+    val departure_code: String,
+    val destination_code: String,
+    val destination_name: String,
+    val passengers: Long
+)
+
 @Dao
 interface FavoriteDao {
 
     @Query("SELECT * FROM favorite ORDER BY departure_code ASC")
     fun getAllFavorites(): Flow<List<Favorite>>
 
-    // Get all favorite destinations with airport details
+    // Get all favorite destinations with airport details (for search screen)
     @Query("""
-        SELECT airport.iata_code, airport.name, airport.passengers
+        SELECT favorite.departure_code, favorite.destination_code, airport.name as destination_name, airport.passengers
         FROM favorite
         INNER JOIN airport ON favorite.destination_code = airport.iata_code
         ORDER BY airport.name ASC
     """)
-    fun getAllFavoriteDestinations(): Flow<List<DestinationAirport>>
+    fun getAllFavoriteRoutes(): Flow<List<FavoriteRoute>>
 
     @Query("SELECT * FROM favorite WHERE departure_code = :departureCode ORDER BY destination_code ASC")
     fun getFavoritesForDeparture(departureCode: String): Flow<List<Favorite>>

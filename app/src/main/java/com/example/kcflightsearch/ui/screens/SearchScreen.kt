@@ -27,7 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.kcflightsearch.data.local.DestinationAirport
+import com.example.kcflightsearch.data.local.FavoriteRoute
 import com.example.kcflightsearch.data.model.Airport
 import com.example.kcflightsearch.viewmodel.FlightSearchViewModel
 
@@ -39,7 +39,7 @@ fun SearchScreen(
 ) {
     val searchQuery by viewModel.searchQuery.collectAsState()
     val searchResults by viewModel.searchResults.collectAsState()
-    val favoriteDestinations by viewModel.allFavoriteDestinations.collectAsState()
+    val favoriteRoutes by viewModel.allFavoriteRoutes.collectAsState()
 
     Scaffold(
         topBar = {
@@ -80,7 +80,7 @@ fun SearchScreen(
             )
 
             // Show favorites when search is empty
-            if (searchQuery.isEmpty() && favoriteDestinations.isNotEmpty()) {
+            if (searchQuery.isEmpty() && favoriteRoutes.isNotEmpty()) {
                 Text(
                     text = "Favorite Destinations",
                     style = MaterialTheme.typography.titleMedium,
@@ -89,27 +89,29 @@ fun SearchScreen(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(favoriteDestinations) { destination ->
-                        FavoriteDestinationItem(
-                            destination = destination,
+                    items(favoriteRoutes) { route ->
+                        FavoriteRouteItem(
+                            route = route,
                             onClick = {
-                                // Find the airport and select it
                                 viewModel.onAirportSelected(
                                     Airport(
                                         id = 0,
-                                        name = destination.name,
-                                        iataCode = destination.iata_code,
-                                        passengers = destination.passengers
+                                        name = route.destination_name,
+                                        iataCode = route.destination_code,
+                                        passengers = route.passengers
                                     )
                                 )
                                 onAirportSelected(
                                     Airport(
                                         id = 0,
-                                        name = destination.name,
-                                        iataCode = destination.iata_code,
-                                        passengers = destination.passengers
+                                        name = route.destination_name,
+                                        iataCode = route.destination_code,
+                                        passengers = route.passengers
                                     )
                                 )
+                            },
+                            onUnfavoriteClick = {
+                                viewModel.toggleFavorite(route.departure_code, route.destination_code, true)
                             }
                         )
                     }
@@ -168,9 +170,10 @@ private fun AirportItem(
 }
 
 @Composable
-private fun FavoriteDestinationItem(
-    destination: com.example.kcflightsearch.data.local.DestinationAirport,
-    onClick: () -> Unit
+private fun FavoriteRouteItem(
+    route: com.example.kcflightsearch.data.local.FavoriteRoute,
+    onClick: () -> Unit,
+    onUnfavoriteClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -186,21 +189,22 @@ private fun FavoriteDestinationItem(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = destination.name,
+                    text = route.destination_name,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = destination.iata_code,
+                    text = "${route.departure_code} → ${route.destination_code}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-            Icon(
-                imageVector = Icons.Default.Favorite,
-                contentDescription = "Favorite",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(start = 8.dp)
-            )
+            IconButton(onClick = onUnfavoriteClick) {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = "Remove from favorites",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }

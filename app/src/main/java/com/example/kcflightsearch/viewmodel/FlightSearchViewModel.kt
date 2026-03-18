@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.kcflightsearch.data.local.DestinationAirport
 import com.example.kcflightsearch.data.local.PreferencesManager
+import com.example.kcflightsearch.data.local.FavoriteRoute
 import com.example.kcflightsearch.data.model.Airport
 import com.example.kcflightsearch.data.model.Favorite
 import com.example.kcflightsearch.data.repository.FlightSearchRepository
@@ -59,9 +60,9 @@ class FlightSearchViewModel(
             initialValue = emptyList()
         )
 
-    // All favorite destinations for displaying on search screen when query is empty
-    val allFavoriteDestinations: StateFlow<List<DestinationAirport>> =
-        repository.getAllFavoriteDestinations()
+    // All favorite routes for displaying on search screen when query is empty
+    val allFavoriteRoutes: StateFlow<List<FavoriteRoute>> =
+        repository.getAllFavoriteRoutes()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
