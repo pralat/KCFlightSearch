@@ -1,6 +1,7 @@
 package com.example.kcflightsearch.ui.screens
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.kcflightsearch.data.local.FavoriteRoute
 import com.example.kcflightsearch.data.model.Airport
 import com.example.kcflightsearch.viewmodel.FlightSearchViewModel
@@ -192,11 +194,29 @@ private fun FavoriteRouteItem(
                     text = route.destination_name,
                     style = MaterialTheme.typography.bodyLarge
                 )
-                Text(
-                    text = "${route.departure_code} → ${route.destination_code}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Box(
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "${route.departure_name} (${route.departure_code})",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+//                            text = " → ", // arrow sat too low on line
+                            text = " --> ",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            text = route.destination_code,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
+                }
             }
             IconButton(onClick = onUnfavoriteClick) {
                 Icon(

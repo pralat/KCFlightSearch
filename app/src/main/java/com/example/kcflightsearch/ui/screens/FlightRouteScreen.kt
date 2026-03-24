@@ -1,5 +1,6 @@
 package com.example.kcflightsearch.ui.screens
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -79,6 +80,7 @@ fun FlightRouteScreen(
                         ).collectAsState(initial = false)
                         
                         RouteItem(
+                            departureName = selectedAirport?.name ?: "",
                             departureCode = selectedAirport?.iataCode ?: "",
                             destination = destination,
                             isFavorite = isFavorite,
@@ -140,6 +142,7 @@ private fun DepartureAirportCard(airport: Airport) {
 
 @Composable
 private fun RouteItem(
+    departureName: String,
     departureCode: String,
     destination: DestinationAirport,
     isFavorite: Boolean,
@@ -161,32 +164,30 @@ private fun RouteItem(
                     text = destination.name,
                     style = MaterialTheme.typography.bodyLarge
                 )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                Box(
                     modifier = Modifier.padding(top = 4.dp)
                 ) {
-                    Text(
-                        text = departureCode,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = " → ",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
-                        text = destination.iata_code,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.tertiary
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "$departureName ($departureCode)",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+//                            text = " → ", // arrow sat too low on line
+                            text = " --> ",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            text = destination.iata_code,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
                 }
             }
-            Text(
-                text = formatPassengers(destination.passengers),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(end = 8.dp)
-            )
             IconButton(onClick = onFavoriteClick) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,

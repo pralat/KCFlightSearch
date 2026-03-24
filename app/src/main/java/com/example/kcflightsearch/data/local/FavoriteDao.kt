@@ -16,6 +16,7 @@ data class DestinationAirport(
 
 data class FavoriteRoute(
     val departure_code: String,
+    val departure_name: String,
     val destination_code: String,
     val destination_name: String,
     val passengers: Long
@@ -29,9 +30,10 @@ interface FavoriteDao {
 
     // Get all favorite destinations with airport details (for search screen)
     @Query("""
-        SELECT favorite.departure_code, favorite.destination_code, airport.name as destination_name, airport.passengers
+        SELECT favorite.departure_code, departure_airport.name as departure_name, favorite.destination_code, airport.name as destination_name, airport.passengers
         FROM favorite
         INNER JOIN airport ON favorite.destination_code = airport.iata_code
+        INNER JOIN airport as departure_airport ON favorite.departure_code = departure_airport.iata_code
         ORDER BY airport.name ASC
     """)
     fun getAllFavoriteRoutes(): Flow<List<FavoriteRoute>>
