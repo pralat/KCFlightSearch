@@ -84,7 +84,7 @@ fun SearchScreen(
             // Show favorites when search is empty
             if (searchQuery.isEmpty() && favoriteRoutes.isNotEmpty()) {
                 Text(
-                    text = "Favorite Destinations",
+                    text = "Favorite Routes",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
@@ -98,16 +98,16 @@ fun SearchScreen(
                                 viewModel.onAirportSelected(
                                     Airport(
                                         id = 0,
-                                        name = route.destination_name,
-                                        iataCode = route.destination_code,
+                                        name = route.departure_name,
+                                        iataCode = route.departure_code,
                                         passengers = route.passengers
                                     )
                                 )
                                 onAirportSelected(
                                     Airport(
                                         id = 0,
-                                        name = route.destination_name,
-                                        iataCode = route.destination_code,
+                                        name = route.departure_name,
+                                        iataCode = route.departure_code,
                                         passengers = route.passengers
                                     )
                                 )
