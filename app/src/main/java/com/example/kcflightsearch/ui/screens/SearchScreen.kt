@@ -2,6 +2,7 @@ package com.example.kcflightsearch.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -118,7 +119,7 @@ fun SearchScreen(
                         )
                     }
                 }
-            } else {
+            } else if (searchQuery.isNotEmpty()) {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -128,6 +129,18 @@ fun SearchScreen(
                             onClick = { onAirportSelected(airport) }
                         )
                     }
+                }
+            } else {
+                // No favorites and no search query - show empty state message
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Search for an airport to find flights",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         }
