@@ -25,6 +25,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.kcflightsearch.data.local.DestinationAirport
 import com.example.kcflightsearch.data.model.Airport
@@ -164,28 +167,24 @@ private fun RouteItem(
                     text = destination.name,
                     style = MaterialTheme.typography.bodyLarge
                 )
-                Box(
-                    modifier = Modifier.padding(top = 4.dp)
+                Row(
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "$departureName ($departureCode)",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-//                            text = " → ", // arrow sat too low on line
-                            text = " --> ",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Text(
-                            text = destination.iata_code,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.tertiary
-                        )
-                    }
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                                append("$departureName ($departureCode)")
+                            }
+                            append(" -->")
+                            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.tertiary)) {
+                                append(destination.iata_code)
+                            }
+                        },
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
             IconButton(onClick = onFavoriteClick) {
